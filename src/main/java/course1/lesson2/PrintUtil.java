@@ -10,7 +10,7 @@ public class PrintUtil {
         public static void printFormatted(String str) {
             System.out.printf("***%s***", str);
             System.out.println();
-    }
+     }
 
     /**
      * Форматирует строку темя * до и после
