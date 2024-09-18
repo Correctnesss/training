@@ -104,6 +104,12 @@ public class CrossesZeroesApp {
         map[y][x] = DOT_O;
     }
 
+    /**
+     * Проверка победы
+     * @param symbol Символ для которого проверяем. Крестик или нолик
+     * @return true, если нет ни одной сводобной
+     */
+
     public static boolean checkWin(char symbol) {
         //проверка строк
         if (map[0][0] == symbol && map[0][1] == symbol && map[0][2] == symbol) {
