@@ -11,4 +11,7 @@ public class Bike extends Transport {
     public void wroomWroom() {
         System.out.println("BZZZZZZZ");
     }
+    public final boolean reqiredHelmet(){
+        return true;
+    }
 }
