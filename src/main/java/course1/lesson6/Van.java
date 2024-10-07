@@ -20,4 +20,10 @@ public class Van extends Car{
     public void setSeats(int seats) {
         this.seats = seats;
     }
+
+    @Override
+    void printName() {
+        super.printName();
+        System.out.println("This is a van");
+    }
 }
