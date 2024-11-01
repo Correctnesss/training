@@ -1,6 +1,6 @@
 package course2.lesson1;
 
-public class User {
+public abstract class User {
     private int id;
     private String name;
     private int age;
@@ -30,11 +30,19 @@ public class User {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setAge(int age) {
         if (age > 0) {
             this.age = age;
         }
+
+        //complex logic
     }
+
+    public abstract void doAction();
 
     String info(){
         return this.toString();
