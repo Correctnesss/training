@@ -15,7 +15,7 @@ public class FirstApp {
 
         System.out.println("b = " + b + " ");
 
-        int c = name + b *2;
+        int c = name + b * 2;
 
         System.out.println("c = " + c);
 
@@ -42,8 +42,7 @@ public class FirstApp {
             System.out.println("v1 > v2");
         } else if (v1 < v2) {
             System.out.println("v1 <= v2");
-        }
-        else {
+        } else {
             System.out.println("v1 = v2");
         }
 
@@ -55,6 +54,7 @@ public class FirstApp {
 
 
     }
+
     public static void drawCat() {
         System.out.println("Лалилалала");
     }
