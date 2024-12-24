@@ -36,10 +36,10 @@ public class MyWindow extends JFrame {
         }*/
 
         setLayout(null);
-       /* for (int i = 1; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             JButton button = new JButton("#" + i);
             add(button);
-        }*/
+        }
 
         JTextField textField = new JTextField();
         textField.setBounds(20, 20, 120, 32);
