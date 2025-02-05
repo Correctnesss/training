@@ -1,5 +1,6 @@
 package course2.lesson7.server;
 
+import com.sun.source.tree.ContinueTree;
 import course2.lesson7.constans.Constans;
 
 import java.io.DataInputStream;
@@ -17,6 +18,7 @@ public class ClientHandler {
     private DataInputStream in;
     private DataOutputStream out;
     private String name;
+    private boolean clientConection;
 
     public ClientHandler(MyServer server, Socket socket) {
         try {
@@ -49,24 +51,44 @@ public class ClientHandler {
                 String[] tokens = str.split("\\s+");   //3
                 String nick = server.getAuthService().getNickByLoginAndPass(tokens[1], tokens[2]);
 
-                for (ClientHandler client : server.clients){
-                    System.out.println(client.toString());
-                    if (client.equals(nick)){
 
-                        sendMessage("Данный пользователь уже в сети");
-                    }
-                }
                 if (nick != null) {
+//                    if (server.clients1.isEmpty()) {
+//                        name = nick;
+//                        sendMessage(Constans.AUTH_COMMAND + " " + nick);
+//                        server.broadcastMessage(nick + " вошел в чат");
+//                        server.subscribe(this);
+//                        server.listUsers(nick);
+//                        return;
+//                    }
+                    for (String client : server.clients1) {
+                     clientConection = client.equals(nick);
+                     if (clientConection){
+                         break;
+                     }
+                    }
+                    if (clientConection) {
+                        sendMessage("Данный пользователь уже в сети");
+                    } else {
+                        name = nick;
+                        sendMessage(Constans.AUTH_COMMAND + " " + nick);
+                        server.broadcastMessage(nick + " вошел в чат");
+                        server.subscribe(this);
+                        server.listUsers(nick);
+                        return;
+                    }
                     //Дописать проверку что такого ника нет в чате
                     //Авторизовались
-                    name = nick;
-                    sendMessage(Constans.AUTH_COMMAND + " " + nick);
-                    server.broadcastMessage(nick + " вошел в чат");
-                    server.subscribe(this);
-                    return;
+//                    name = nick;
+//                    sendMessage(Constans.AUTH_COMMAND + " " + nick);
+//                    server.broadcastMessage(nick + " вошел в чат");
+//                    server.subscribe(this);
+//                    server.listUsers(nick);
+//                    return;
                 } else {
                     sendMessage("Неверные логин/пароль");
                 }
+
             }
         }
     }

@@ -27,14 +27,10 @@ public class MyServer {
      * Активные клиенты.
      */
 
-    public List<ClientHandler> clients;
+    private List<ClientHandler> clients;
 
-    public List<ClientHandler> getClients() {
-//        for (ClientHandler client : clients){
-////            return client;
-//        }
-        return clients;
-    }
+    public List<String> clients1;
+
 
     public MyServer() {
         try (ServerSocket server = new ServerSocket(Constans.SERVER_PORT)) {
@@ -42,6 +38,7 @@ public class MyServer {
             authService.start();
 
             clients = new ArrayList<>();
+            clients1 = new ArrayList<>();
 
             while (true) {
                 System.out.println("Сервер ожидает подключения...");
@@ -69,6 +66,10 @@ public class MyServer {
 
     public synchronized void subscribe(ClientHandler client) {
         clients.add(client);
+    }
+
+    public synchronized void listUsers(String client){
+        clients1.add(client);
     }
 
     public synchronized void unsubscribe(ClientHandler client) {
