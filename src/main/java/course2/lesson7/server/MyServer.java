@@ -21,11 +21,20 @@ public class MyServer {
      * Сервис аутентификации.
      */
     private AuthService authService;
+
+
     /**
      * Активные клиенты.
      */
 
-    private List<ClientHandler> clients;
+    public List<ClientHandler> clients;
+
+    public List<ClientHandler> getClients() {
+//        for (ClientHandler client : clients){
+////            return client;
+//        }
+        return clients;
+    }
 
     public MyServer() {
         try (ServerSocket server = new ServerSocket(Constans.SERVER_PORT)) {
@@ -52,10 +61,10 @@ public class MyServer {
 
     public synchronized void broadcastMessage(String message) {
 
-        clients.forEach(client -> client.sendMessage(message));
-//        for (ClientHandler client : clients){
-//            client.sendMessage(message);
-//        }
+//        clients.forEach(client -> client.sendMessage(message));
+        for (ClientHandler client : clients){
+            client.sendMessage(message);
+        }
     }
 
     public synchronized void subscribe(ClientHandler client) {

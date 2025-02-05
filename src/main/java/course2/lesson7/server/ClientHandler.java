@@ -49,6 +49,13 @@ public class ClientHandler {
                 String[] tokens = str.split("\\s+");   //3
                 String nick = server.getAuthService().getNickByLoginAndPass(tokens[1], tokens[2]);
 
+                for (ClientHandler client : server.clients){
+                    System.out.println(client.toString());
+                    if (client.equals(nick)){
+
+                        sendMessage("Данный пользователь уже в сети");
+                    }
+                }
                 if (nick != null) {
                     //Дописать проверку что такого ника нет в чате
                     //Авторизовались
