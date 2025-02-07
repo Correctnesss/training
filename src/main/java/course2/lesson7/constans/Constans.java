@@ -18,5 +18,7 @@ public class Constans {
 
     public static final String AUTH_OK_COMMAND = "/authok";
 
+    public static final String AUTH_OK1_COMMAND = "/1authok1";
+
     public static final String CLIENTS_LIST_COMMAND = "/clients";
 }

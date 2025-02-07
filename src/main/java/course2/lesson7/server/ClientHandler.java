@@ -1,6 +1,5 @@
 package course2.lesson7.server;
 
-import com.sun.source.tree.ContinueTree;
 import course2.lesson7.constans.Constans;
 
 import java.io.DataInputStream;
@@ -19,7 +18,7 @@ public class ClientHandler {
     private DataInputStream in;
     private DataOutputStream out;
     private String name;
-    private boolean clientConection;
+    private boolean clientConnection;
 
     public ClientHandler(MyServer server, Socket socket) {
         try {
@@ -50,10 +49,10 @@ public class ClientHandler {
 
             if (str.startsWith(Constans.AUTH_COMMAND)) {
                 String[] tokens = str.split("\\s+");   //3
-                Optional<String> nick = server.getAuthService().getNickByLoginAndPass(tokens[1], tokens[2]);
+                String nick = server.getAuthService().getNickByLoginAndPass(tokens[1], tokens[2]);
 
 
-                if (nick.isPresent()) {
+                if (nick != null) {
 //                    if (server.clients1.isEmpty()) {
 //                        name = nick;
 //                        sendMessage(Constans.AUTH_COMMAND + " " + nick);
@@ -63,16 +62,16 @@ public class ClientHandler {
 //                        return;
 //                    }
                     for (String client : server.clients1) {
-                        clientConection = client.equals(nick);
-                        if (clientConection) {
+                        clientConnection = client.equals(nick);
+                        if (clientConnection) {
                             break;
                         }
                     }
-                    if (clientConection) {
+                    if (clientConnection) {
                         sendMessage("Данный пользователь уже в сети");
                     } else {
-                        name = nick.get();
-                        sendMessage(Constans.AUTH_COMMAND + " " + nick);
+                        name = nick;
+                        sendMessage(Constans.AUTH_OK_COMMAND + " " + name);
                         server.broadcastMessage(nick + " вошел в чат");
                         server.subscribe(this);
                         server.listUsers(name);
@@ -112,6 +111,7 @@ public class ClientHandler {
 
                 System.out.println("Сообщение от " + name + ": " + messageFromClient);
                 if (messageFromClient.equals(Constans.END_COMMAND)) {
+                    sendMessage(Constans.END_COMMAND);
                     break;
                 }
                 server.broadcastMessage(name + ": " + messageFromClient);

@@ -28,19 +28,28 @@ public class EchoClient extends JFrame {
             openConnection();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
         prepareUI();
     }
 
-    private void openConnection() throws IOException {
+    private void openConnection() throws IOException, InterruptedException {
         socket = new Socket(Constans.SERVER_ADDRESS, Constans.SERVER_PORT);
         dataInputStream = new DataInputStream(socket.getInputStream());
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
-        new Thread(() -> {
+        long a = System.currentTimeMillis();
+
+        Thread auth = new Thread(() -> {
             try {
                 while (true) {
                     String messageFromServer = dataInputStream.readUTF();
                     if (messageFromServer.equals("/end")) {
+                        textArea.append("Соединение с сервером разорвано");
+                        textArea.append("\n");
+                        break;
+                    } else if (System.currentTimeMillis() - a > 1111000) {
+                        System.out.println(a);
                         break;
                     } else if (messageFromServer.startsWith(Constans.AUTH_OK_COMMAND)) {
                         String[] tokens = messageFromServer.split("\\s");
@@ -49,6 +58,7 @@ public class EchoClient extends JFrame {
                         textArea.append("\n");
                     } else if (messageFromServer.startsWith(Constans.CLIENTS_LIST_COMMAND)) {
                         //
+
                     } else {
                         textArea.append(messageFromServer);
                         textArea.append("\n");
@@ -60,7 +70,25 @@ public class EchoClient extends JFrame {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-        }).start();
+        });
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(7000);
+                while (true) {
+                    if (dataInputStream.readUTF().startsWith("/authok")) {
+                        break;
+                    } else closeConnection();
+                }
+//                textArea.append("Соединение разорвано");
+//                textField.setEnabled(false);
+//                closeConnection();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        auth.start();
+        thread.start();
+
     }
 
     private void closeConnection() {
@@ -151,7 +179,7 @@ public class EchoClient extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(EchoClient::new);
+        SwingUtilities.invokeLater(() -> new EchoClient());
     }
 
 

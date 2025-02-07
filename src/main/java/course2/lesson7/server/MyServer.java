@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -30,7 +31,7 @@ public class MyServer {
 
     private List<ClientHandler> clients;
 
-    public List<String> clients1;
+    public List <String> clients1;
 
 
     public MyServer() {

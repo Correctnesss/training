@@ -26,7 +26,7 @@ public class BaseAuthService implements AuthService {
     }
 
     @Override
-    public Optional<String> getNickByLoginAndPass(String login, String pass) {
+    public String getNickByLoginAndPass(String login, String pass) {
 //        entries.stream()
 //                .filter(entry -> entry.login.equals(login) && entry.password.equals(pass))
 //                .map(entry -> entry.nick)
@@ -34,11 +34,11 @@ public class BaseAuthService implements AuthService {
 
         for (Entry entry : entries) {
             if (entry.login.equals(login) && entry.password.equals(pass)) {
-                return Optional.of(entry.nick);
+                return entry.nick;
             }
         }
-        return Optional.empty();
-//        return null;
+//        return Optional.empty();
+        return null;
     }
 
     private class Entry {
