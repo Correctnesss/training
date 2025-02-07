@@ -20,6 +20,7 @@ public class EchoClient extends JFrame {
     private Socket socket;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
+    private String login;
 
 
     public EchoClient() {
@@ -39,11 +40,19 @@ public class EchoClient extends JFrame {
             try {
                 while (true) {
                     String messageFromServer = dataInputStream.readUTF();
-                    if(messageFromServer.equals("/end")){
+                    if (messageFromServer.equals("/end")) {
                         break;
+                    } else if (messageFromServer.startsWith(Constans.AUTH_OK_COMMAND)) {
+                        String[] tokens = messageFromServer.split("\\s");
+                        this.login = tokens[1];
+                        textArea.append("Успешно авторизован как " + login);
+                        textArea.append("\n");
+                    } else if (messageFromServer.startsWith(Constans.CLIENTS_LIST_COMMAND)) {
+                        //
+                    } else {
+                        textArea.append(messageFromServer);
+                        textArea.append("\n");
                     }
-                    textArea.append(messageFromServer);
-                    textArea.append("\n");
                 }
                 textArea.append("Соединение разорвано");
                 textField.setEnabled(false);
@@ -54,34 +63,34 @@ public class EchoClient extends JFrame {
         }).start();
     }
 
-    private void closeConnection(){
+    private void closeConnection() {
         try {
             dataOutputStream.close();
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
         }
         try {
             dataInputStream.close();
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
         }
 
         try {
             socket.close();
-        } catch (Exception ex){
+        } catch (Exception ex) {
 
         }
     }
 
-    private void sendMessage(){
-        if(textField.getText().trim().isEmpty()){
+    private void sendMessage() {
+        if (textField.getText().trim().isEmpty()) {
             return;
         }
-        try{
+        try {
             dataOutputStream.writeUTF(textField.getText());
             textField.setText("");
             textField.grabFocus();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -109,7 +118,7 @@ public class EchoClient extends JFrame {
         JTextField loginField = new JTextField();
         loginPanel.add(loginField, BorderLayout.WEST);
         JTextField passField = new JTextField();
-        loginPanel.add(passField,BorderLayout.CENTER);
+        loginPanel.add(passField, BorderLayout.CENTER);
         JButton authButton = new JButton("Авторизоваться");
         loginPanel.add(authButton, BorderLayout.EAST);
         add(loginPanel, BorderLayout.NORTH);

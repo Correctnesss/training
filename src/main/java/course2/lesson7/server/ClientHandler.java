@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Optional;
 
 /**
  * Обработчик для конкретного клиента.
@@ -49,10 +50,10 @@ public class ClientHandler {
 
             if (str.startsWith(Constans.AUTH_COMMAND)) {
                 String[] tokens = str.split("\\s+");   //3
-                String nick = server.getAuthService().getNickByLoginAndPass(tokens[1], tokens[2]);
+                Optional<String> nick = server.getAuthService().getNickByLoginAndPass(tokens[1], tokens[2]);
 
 
-                if (nick != null) {
+                if (nick.isPresent()) {
 //                    if (server.clients1.isEmpty()) {
 //                        name = nick;
 //                        sendMessage(Constans.AUTH_COMMAND + " " + nick);
@@ -62,19 +63,19 @@ public class ClientHandler {
 //                        return;
 //                    }
                     for (String client : server.clients1) {
-                     clientConection = client.equals(nick);
-                     if (clientConection){
-                         break;
-                     }
+                        clientConection = client.equals(nick);
+                        if (clientConection) {
+                            break;
+                        }
                     }
                     if (clientConection) {
                         sendMessage("Данный пользователь уже в сети");
                     } else {
-                        name = nick;
+                        name = nick.get();
                         sendMessage(Constans.AUTH_COMMAND + " " + nick);
                         server.broadcastMessage(nick + " вошел в чат");
                         server.subscribe(this);
-                        server.listUsers(nick);
+                        server.listUsers(name);
                         return;
                     }
                     //Дописать проверку что такого ника нет в чате
@@ -105,12 +106,21 @@ public class ClientHandler {
         while (true) {
             String messageFromClient = in.readUTF();
             //hint: можем получать команду
-            System.out.println("Сообщение от " + name + ": " + messageFromClient);
-            if (messageFromClient.equals(Constans.END_COMMAND)) {
-                break;
+            if (messageFromClient.startsWith(Constans.CLIENTS_LIST_COMMAND)) {
+                server.getActiveClients();
+            } else {
+
+                System.out.println("Сообщение от " + name + ": " + messageFromClient);
+                if (messageFromClient.equals(Constans.END_COMMAND)) {
+                    break;
+                }
+                server.broadcastMessage(name + ": " + messageFromClient);
             }
-            server.broadcastMessage(name + ": " + messageFromClient);
         }
+    }
+
+    public String getName() {
+        return name;
     }
 
     private void closeConnection() {

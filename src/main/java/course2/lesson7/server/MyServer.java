@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Логика сервера.
@@ -74,5 +75,15 @@ public class MyServer {
 
     public synchronized void unsubscribe(ClientHandler client) {
         clients.remove(client);
+    }
+
+    public synchronized String getActiveClients() {
+        StringBuilder sb = new StringBuilder(Constans.CLIENTS_LIST_COMMAND).append(" ");
+        sb.append(clients.stream().map(c ->c.getName() )
+                .collect(Collectors.joining(" ")));
+//        for (ClientHandler clientHandler : clients){
+//            sb.append(clientHandler.getName()).append(" ");
+//        }
+        return sb.toString();
     }
 }
