@@ -24,6 +24,7 @@ public class MyServer {
      */
     private AuthService authService;
 
+    public ClientHandler clientHandler;
 
     /**
      * Активные клиенты.
@@ -31,7 +32,7 @@ public class MyServer {
 
     private List<ClientHandler> clients;
 
-    public List <String> clients1;
+    public List<String> clients1;
 
 
     public MyServer() {
@@ -46,7 +47,17 @@ public class MyServer {
                 System.out.println("Сервер ожидает подключения...");
                 Socket socket = server.accept();
                 System.out.println("Клиент подключился!");
-                new ClientHandler(this, socket);
+                ClientHandler clientHandler1 = new ClientHandler(this, socket);
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(120000);
+                        if(clientHandler1.getName() == null){
+                            clientHandler1.sendMessage(Constans.END_COMMAND);
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }).start();
             }
         } catch (IOException ex) {
             System.out.println("Ошибка в работе сервера.");
@@ -61,16 +72,20 @@ public class MyServer {
     public synchronized void broadcastMessage(String message) {
 
 //        clients.forEach(client -> client.sendMessage(message));
-        for (ClientHandler client : clients){
+        for (ClientHandler client : clients) {
             client.sendMessage(message);
         }
+    }
+
+    public synchronized void authok() {
+
     }
 
     public synchronized void subscribe(ClientHandler client) {
         clients.add(client);
     }
 
-    public synchronized void listUsers(String client){
+    public synchronized void listUsers(String client) {
         clients1.add(client);
     }
 
@@ -80,7 +95,7 @@ public class MyServer {
 
     public synchronized String getActiveClients() {
         StringBuilder sb = new StringBuilder(Constans.CLIENTS_LIST_COMMAND).append(" ");
-        sb.append(clients.stream().map(c ->c.getName() )
+        sb.append(clients.stream().map(c -> c.getName())
                 .collect(Collectors.joining(" ")));
 //        for (ClientHandler clientHandler : clients){
 //            sb.append(clientHandler.getName()).append(" ");

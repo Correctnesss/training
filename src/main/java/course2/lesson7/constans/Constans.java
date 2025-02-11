@@ -8,7 +8,7 @@ public class Constans {
     /**
      * Порт сервера.
      */
-    public static final int SERVER_PORT = 8189;
+    public static final int SERVER_PORT = 8089;
     /**
      * Команда конца связи.
      */

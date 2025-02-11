@@ -48,14 +48,17 @@ public class EchoClient extends JFrame {
                         textArea.append("Соединение с сервером разорвано");
                         textArea.append("\n");
                         break;
-                    } else if (System.currentTimeMillis() - a > 1111000) {
-                        System.out.println(a);
-                        break;
-                    } else if (messageFromServer.startsWith(Constans.AUTH_OK_COMMAND)) {
+                    }
+//                    else if (System.currentTimeMillis() - a > 1111000) {
+//                        System.out.println(a);
+//                        break;
+//                    }
+                    else if (messageFromServer.startsWith(Constans.AUTH_OK_COMMAND)) {
                         String[] tokens = messageFromServer.split("\\s");
                         this.login = tokens[1];
                         textArea.append("Успешно авторизован как " + login);
                         textArea.append("\n");
+                        dataOutputStream.writeUTF(Constans.AUTH_OK_COMMAND);
                     } else if (messageFromServer.startsWith(Constans.CLIENTS_LIST_COMMAND)) {
                         //
 
@@ -71,23 +74,23 @@ public class EchoClient extends JFrame {
                 ex.printStackTrace();
             }
         });
-        Thread thread = new Thread(() -> {
-            try {
-                Thread.sleep(7000);
-                while (true) {
-                    if (dataInputStream.readUTF().startsWith("/authok")) {
-                        break;
-                    } else closeConnection();
-                }
-//                textArea.append("Соединение разорвано");
-//                textField.setEnabled(false);
-//                closeConnection();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
+//        Thread thread = new Thread(() -> {
+//            try {
+//                Thread.sleep(7000);
+//                while (true) {
+//                    if (dataInputStream.readUTF().startsWith("/authok")) {
+//                        break;
+//                    } else closeConnection();
+//                }
+////                textArea.append("Соединение разорвано");
+////                textField.setEnabled(false);
+////                closeConnection();
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        });
         auth.start();
-        thread.start();
+//        thread.start();
 
     }
 
