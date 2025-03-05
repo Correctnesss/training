@@ -1,5 +1,6 @@
 package course2.lesson7.server;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 /**
@@ -9,7 +10,7 @@ public interface AuthService {
     /**
      * Запустить сервис.
      */
-    void start();
+    void start() throws SQLException;
 
     /**
      * Отключить сервис.
@@ -24,4 +25,6 @@ public interface AuthService {
      * @return никнейм если найден или null, если такого нет
      */
     String getNickByLoginAndPass(String login, String pass);
+
+    String changeNick(String nick, String nick1);
 }

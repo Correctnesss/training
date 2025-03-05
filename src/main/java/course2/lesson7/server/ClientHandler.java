@@ -14,6 +14,7 @@ import java.util.Optional;
 public class ClientHandler {
 
     private MyServer server;
+    private BdAuthService bdAuthService;
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
@@ -108,13 +109,21 @@ public class ClientHandler {
             if (messageFromClient.startsWith(Constans.CLIENTS_LIST_COMMAND)) {
                 server.getActiveClients();
             } else {
-
                 System.out.println("Сообщение от " + name + ": " + messageFromClient);
-                if (messageFromClient.equals(Constans.END_COMMAND)) {
+
+                if (messageFromClient.startsWith("/change")) {
+                    String[] tokens = messageFromClient.split("\\s+");
+                    server.changeNick(tokens[1], name);
+                    server.broadcastMessage(name + " изменил ник на " + tokens[1]);
+                    name = tokens[1];
+                } else if (messageFromClient.equals(Constans.END_COMMAND)) {
                     sendMessage(Constans.END_COMMAND);
                     break;
+                } else if (messageFromClient.startsWith(Constans.AUTH_COMMAND)) {
+                    continue;
+                } else {
+                    server.broadcastMessage(name + ": " + messageFromClient);
                 }
-                server.broadcastMessage(name + ": " + messageFromClient);
             }
         }
     }
