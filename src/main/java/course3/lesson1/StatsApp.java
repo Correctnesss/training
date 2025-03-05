@@ -21,6 +21,11 @@ public class StatsApp {
 
 
     public static <T extends Number> double getAvg(T[] array) {
-        return 0;
+        double sum = 0;
+        for (int i = 0; i < array.length; i++) {
+            sum += array[i].doubleValue();
+        }
+        sum = sum/array.length;
+        return sum;
     }
 }

@@ -5,6 +5,7 @@ import course2.lesson7.constans.Constans;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class MyServer {
 
     public MyServer() {
         try (ServerSocket server = new ServerSocket(Constans.SERVER_PORT)) {
-            authService = new BaseAuthService();//
+            authService = new BdAuthService();//
             authService.start();
 
             clients = new ArrayList<>();
@@ -62,6 +63,8 @@ public class MyServer {
         } catch (IOException ex) {
             System.out.println("Ошибка в работе сервера.");
             ex.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         } finally {
             if (authService != null) {
                 authService.stop();
@@ -77,9 +80,6 @@ public class MyServer {
         }
     }
 
-    public synchronized void authok() {
-
-    }
 
     public synchronized void subscribe(ClientHandler client) {
         clients.add(client);
@@ -101,5 +101,10 @@ public class MyServer {
 //            sb.append(clientHandler.getName()).append(" ");
 //        }
         return sb.toString();
+    }
+
+    public synchronized String changeNick(String nick, String nick1){
+        authService.changeNick(nick,nick1);
+        return null;
     }
 }

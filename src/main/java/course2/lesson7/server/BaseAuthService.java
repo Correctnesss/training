@@ -41,6 +41,11 @@ public class BaseAuthService implements AuthService {
         return null;
     }
 
+    @Override
+    public String changeNick(String nick, String nick1) {
+        return null;
+    }
+
     private class Entry {
         private String login;
         private String password;
